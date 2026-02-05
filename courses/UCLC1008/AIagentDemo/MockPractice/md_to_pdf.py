@@ -9,9 +9,17 @@ try:
 except ImportError:
     markdown = None
 
-MD_FILE = Path(__file__).resolve().parent / "practice1.md"
-HTML_FILE = Path(__file__).resolve().parent / "practice1.html"
-PDF_FILE = Path(__file__).resolve().parent / "practice1.pdf"
+def _paths(basename: str):
+    parent = Path(__file__).resolve().parent
+    return (
+        parent / f"{basename}.md",
+        parent / f"{basename}.html",
+        parent / f"{basename}.pdf",
+    )
+
+# Default: practice1; optional: python3 md_to_pdf.py practice1-abridged
+BASENAME = sys.argv[1].replace(".md", "") if len(sys.argv) > 1 else "practice1"
+MD_FILE, HTML_FILE, PDF_FILE = _paths(BASENAME)
 
 PRINT_CSS = """
 @media print {
@@ -82,7 +90,7 @@ def main():
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mock Academic Writing Quiz – Practice 1</title>
+  <title>Mock AWQ – {BASENAME.replace("-", " ").title()}</title>
   <style>
     body {{ font-family: Georgia, 'Times New Roman', serif; line-height: 1.5; color: #222; max-width: 800px; margin: 0 auto; padding: 1em; }}
     h1 {{ font-size: 1.5em; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }}
